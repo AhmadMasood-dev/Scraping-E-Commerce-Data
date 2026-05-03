@@ -1,0 +1,41 @@
+{
+  "name": "scaping-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "node src/seed/kaggleSeeder.js",
+    "seed:csv": "node src/seed/csvSeeder.js",
+    "seed:zameen": "node src/seed/zameenSeeder.js",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AhmadMasood-dev/Scraping-E-Commerce-Data.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AhmadMasood-dev/Scraping-E-Commerce-Data/issues"
+  },
+  "homepage": "https://github.com/AhmadMasood-dev/Scraping-E-Commerce-Data#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cheerio": "^1.2.0",
+    "cors": "^2.8.6",
+    "csv-parser": "^3.2.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.5.0",
+    "natural": "^8.1.1",
+    "puppeteer": "^24.42.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
