@@ -1,13 +1,10 @@
 const mongoose = require('mongoose');
+const logger = require('./logger');
 
 const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/pqc_db');
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(`Error connection to MongoDB: ${error.message}`);
-    process.exit(1);
-  }
+  const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/pqc_db';
+  const conn = await mongoose.connect(uri, { serverSelectionTimeoutMS: 8000 });
+  logger.info(`MongoDB connected: ${conn.connection.host}/${conn.connection.name}`);
 };
 
 module.exports = connectDB;

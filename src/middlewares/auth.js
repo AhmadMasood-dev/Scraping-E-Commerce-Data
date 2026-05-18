@@ -1,34 +1,22 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
+const { UnauthorizedError } = require('../errors/AppError');
 
-const protect = async (req, res, next) => {
-  let token;
-
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    try {
-      // Get token from header
-      token = req.headers.authorization.split(' ')[1];
-
-      // Verify token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'supersecretjwtkey_for_fyp_pqc');
-
-      // Get user from the token (exclude password hash)
-      req.user = await User.findById(decoded.id).select('-password_hash');
-      
-      if (!req.user) {
-        return res.status(401).json({ success: false, message: 'User not found' });
-      }
-
-      next();
-    } catch (error) {
-      console.error(error);
-      return res.status(401).json({ success: false, message: 'Not authorized' });
-    }
+const protect = async (req, _res, next) => {
+  const auth = req.headers.authorization;
+  if (!auth || !auth.startsWith('Bearer ')) {
+    return next(new UnauthorizedError('Not authorized — missing token'));
   }
-
-  if (!token) {
-    return res.status(401).json({ success: false, message: 'Not authorized, no token' });
+  const token = auth.split(' ')[1];
+  let decoded;
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET || 'supersecretjwtkey_for_fyp_pqc');
+  } catch (_e) {
+    return next(new UnauthorizedError('Not authorized — invalid or expired token'));
   }
+  req.user = await User.findById(decoded.id).select('-password_hash');
+  if (!req.user) return next(new UnauthorizedError('Not authorized — user not found'));
+  next();
 };
 
 module.exports = { protect };
